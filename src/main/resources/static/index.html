@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXORA | Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <span>NEXORA</span>
+        </div>
+
+        <div class="menu-label">MAIN MENU</div>
+
+        <nav>
+            <a href="#" class="nav-link active" onclick="showPage('dashboard',this)">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="#" class="nav-link" onclick="showPage('employees',this)">
+                <i class="fa-solid fa-users"></i> Employees
+            </a>
+            <a href="#" class="nav-link" onclick="showPage('departments',this)">
+                <i class="fa-solid fa-building"></i> Departments
+            </a>
+            <a href="#" class="nav-link" onclick="showPage('attendance',this)">
+                <i class="fa-solid fa-calendar-check"></i> Attendance
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="admin-card">
+                <div class="avatar">AD</div>
+                <div>
+                    <strong>Admin</strong>
+                    <small>HR Manager</small>
+                </div>
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h2 id="pageTitle">Dashboard</h2>
+                <p id="pageSubtitle">Welcome back! Here's what's happening today.</p>
+            </div>
+
+            <div class="top-actions">
+                <div class="date-display">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="todayDate"></span>
+                </div>
+                <div class="profile-avatar">AD</div>
+            </div>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
+
+            <div class="welcome-banner">
+                <div>
+                    <span class="welcome-tag">NEXORA HR SYSTEM</span>
+                    <h1>Welcome back, Admin! 👋</h1>
+                    <p>Manage your workforce and keep everything organized.</p>
+                </div>
+                <i class="fa-solid fa-users-viewfinder banner-icon"></i>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Total Employees</span>
+                        <div class="stat-icon purple"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                    <h2 id="totalEmployees">0</h2>
+                    <small>Registered employees</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Active Employees</span>
+                        <div class="stat-icon green"><i class="fa-solid fa-user-check"></i></div>
+                    </div>
+                    <h2 id="activeEmployees">0</h2>
+                    <small>Currently active</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Departments</span>
+                        <div class="stat-icon orange"><i class="fa-solid fa-building"></i></div>
+                    </div>
+                    <h2 id="totalDepartments">0</h2>
+                    <small>Company departments</small>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-top">
+                        <span>Attendance Records</span>
+                        <div class="stat-icon blue"><i class="fa-solid fa-calendar-check"></i></div>
+                    </div>
+                    <h2 id="totalAttendance">0</h2>
+                    <small>Total records</small>
+                </div>
+
+            </div>
+            <div class="chart-card">
+                <h3>Employees by Department</h3>
+                <div id="departmentChart">
+                    Loading chart...
+                </div>
+            </div>
+            <div class="content-card">
+                <div class="section-heading">
+                    <div>
+                        <h3>Recent Employees</h3>
+                        <p>Latest registered employees</p>
+                    </div>
+                    <button class="outline-btn" onclick="showPage('employees',document.querySelectorAll('.nav-link')[1])">
+                        View All <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>EMPLOYEE</th>
+                            <th>DEPARTMENT</th>
+                            <th>JOB TITLE</th>
+                            <th>STATUS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="recentEmployees">
+                        <tr><td colspan="4" class="empty">Loading employees...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- EMPLOYEES -->
+        <section id="employees" class="page">
+
+            <div class="page-toolbar">
+                <div>
+                    <h3>All Employees</h3>
+                    <p>Manage your company's employees</p>
+                </div>
+
+                <div class="toolbar-actions">
+                    <button class="export-btn" onclick="exportEmployees()">
+                        <i class="fa-solid fa-file-excel"></i> Export Employees
+                    </button>
+
+                    <button class="primary-btn" onclick="openEmployeeModal()">
+                        <i class="fa-solid fa-plus"></i> Add Employee
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="content-card">
+                <div class="employee-filters">
+
+                    <div class="filter-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input
+                                type="text"
+                                id="employeeSearch"
+                                placeholder="Search employees..."
+                        >
+                    </div>
+
+                    <select id="departmentFilter">
+                        <option value="">All Departments</option>
+                    </select>
+
+                    <select id="statusFilter">
+                        <option value="">All Statuses</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>EMPLOYEE</th>
+                            <th>EMAIL</th>
+                            <th>DEPARTMENT</th>
+                            <th>JOB TITLE</th>
+                            <th>SALARY</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="employeesTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- DEPARTMENTS -->
+        <section id="departments" class="page">
+
+            <div class="page-toolbar">
+                <div>
+                    <h3>Departments</h3>
+                    <p>Manage company departments</p>
+                </div>
+                <button class="primary-btn" onclick="openDepartmentModal()">
+                    <i class="fa-solid fa-plus"></i> Add Department
+                </button>
+            </div>
+
+            <div class="department-grid" id="departmentGrid"></div>
+
+        </section>
+
+        <!-- ATTENDANCE -->
+        <section id="attendance" class="page">
+
+            <div class="page-toolbar">
+                <div>
+                    <h3>Attendance Management</h3>
+                    <p>Track employee attendance records</p>
+                </div>
+                <button class="primary-btn" onclick="openAttendanceModal()">
+                    <i class="fa-solid fa-plus"></i> Record Attendance
+                </button>
+            </div>
+
+            <div class="content-card">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>EMPLOYEE</th>
+                            <th>DATE</th>
+                            <th>CHECK IN</th>
+                            <th>CHECK OUT</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody id="attendanceTable"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<!-- EMPLOYEE MODAL -->
+<div class="modal-overlay" id="employeeModal">
+    <div class="modal">
+        <div class="modal-heading">
+            <div>
+                <h3 id="employeeModalTitle">Add New Employee</h3>
+                <p>Enter employee information below</p>
+            </div>
+            <button class="close-btn" onclick="closeModal('employeeModal')">&times;</button>
+        </div>
+
+        <form id="employeeForm">
+            <input type="hidden" id="employeeId">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>First Name *</label>
+                    <input id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label>Last Name *</label>
+                    <input id="lastName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input id="phone">
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select id="gender">
+                        <option value="">Select Gender</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Department *</label>
+                    <select id="department" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Job Title *</label>
+                    <input id="jobTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Salary *</label>
+                    <input type="number" id="salary" min="0.01" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Hire Date</label>
+                    <input type="date" id="hireDate">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="status">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal('employeeModal')">Cancel</button>
+                <button type="submit" class="primary-btn">Save Employee</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- DEPARTMENT MODAL -->
+<div class="modal-overlay" id="departmentModal">
+    <div class="modal small-modal">
+        <div class="modal-heading">
+            <h3 id="departmentModalTitle">Add Department</h3>
+            <button class="close-btn" onclick="closeModal('departmentModal')">&times;</button>
+        </div>
+        <form id="departmentForm">
+            <input type="hidden" id="departmentId">
+            <div class="form-group">
+                <label>Department Name *</label>
+                <input id="departmentName" required>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="departmentDescription"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal('departmentModal')">Cancel</button>
+                <button type="submit" class="primary-btn">Save Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ATTENDANCE MODAL -->
+<div class="modal-overlay" id="attendanceModal">
+    <div class="modal small-modal">
+        <div class="modal-heading">
+            <h3>Record Attendance</h3>
+            <button class="close-btn" onclick="closeModal('attendanceModal')">&times;</button>
+        </div>
+        <form id="attendanceForm">
+            <div class="form-group">
+                <label>Employee *</label>
+                <select id="attendanceEmployee" required></select>
+            </div>
+            <div class="form-group">
+                <label>Date *</label>
+                <input type="date" id="attendanceDate" required>
+            </div>
+            <div class="form-group">
+                <label>Check In</label>
+                <input type="time" id="checkIn">
+            </div>
+            <div class="form-group">
+                <label>Check Out</label>
+                <input type="time" id="checkOut">
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="attendanceStatus">
+                    <option>Present</option>
+                    <option>Absent</option>
+                    <option>Late</option>
+                    <option>Half Day</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="cancel-btn" onclick="closeModal('attendanceModal')">Cancel</button>
+                <button type="submit" class="primary-btn">Save Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+
+<script src="app.js"></script>
+</body>
+</html>
+tml>
